@@ -21,11 +21,60 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildAppBar(),
-      body: ListView(
-        children:
-            listOfTodos.map((todo) => ListTile(leading: Text(todo))).toList(),
-      ),
+      body: _buildBody(),
       floatingActionButton: _buildFloatingActionButton(context),
+    );
+  }
+
+  ListView _buildBody() {
+    // build a ListTile for each todo item
+    Widget buildTodoTile(int index) {
+      String todo = listOfTodos[index];
+
+      return ListTile(
+        title: Text(
+          todo,
+          style: const TextStyle(
+            fontSize: 18,
+          ),
+        ),
+        trailing: SizedBox(
+          width: 100,
+          child: Row(
+            children: [
+              // edit icon
+              IconButton(
+                onPressed: () {},
+                icon: const Icon(
+                  Icons.edit_outlined,
+                  color: Colors.green,
+                ),
+              ),
+              // delete icon
+              const Expanded(child: SizedBox()),
+              IconButton(
+                onPressed: () {
+                  setState(() {
+                    listOfTodos.removeAt(index);
+                  });
+                },
+                icon: const Icon(
+                  Icons.delete_outlined,
+                  color: Colors.red,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    return ListView.separated(
+      itemCount: listOfTodos.length,
+      separatorBuilder: (_, __) => const Divider(),
+      itemBuilder: (_, index) {
+        return buildTodoTile(index);
+      },
     );
   }
 

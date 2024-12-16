@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class AddTodoDialog extends StatefulWidget {
-  Function onAddTodo;
-  AddTodoDialog({super.key, required this.onAddTodo});
+  final Function onAddTodo;
+  const AddTodoDialog({super.key, required this.onAddTodo});
 
   @override
   State<AddTodoDialog> createState() => _AddTodoDialogState();
@@ -46,6 +46,11 @@ class _AddTodoDialogState extends State<AddTodoDialog> {
   TextField _buildTextField() {
     return TextField(
       controller: controller,
+      autofocus: true,
+      onSubmitted: (value) {
+        widget.onAddTodo(value);
+        Navigator.pop(context);
+      },
 
       // decoration
       decoration: InputDecoration(
