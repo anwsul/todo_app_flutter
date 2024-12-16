@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app_flutter/widgets/add_todo_dialog.dart';
+import 'package:todo_app_flutter/widgets/confirm_deletion.dart';
+import 'package:todo_app_flutter/widgets/edit_todo_dialog.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -11,9 +13,21 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   List<String> listOfTodos = [];
 
-  updateTodoList(String todo) {
+  addTodoList(String todo) {
     setState(() {
       listOfTodos.add(todo);
+    });
+  }
+
+  editTodoList(int index, String newValue) {
+    setState(() {
+      listOfTodos[index] = newValue;
+    });
+  }
+
+  deleteTodo(int index) {
+    setState(() {
+      listOfTodos.removeAt(index);
     });
   }
 
@@ -44,7 +58,17 @@ class _HomePageState extends State<HomePage> {
             children: [
               // edit icon
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext _) {
+                        return EditTodoDialog(
+                          currentValue: todo,
+                          index: index,
+                          onEditTodo: editTodoList,
+                        );
+                      });
+                },
                 icon: const Icon(
                   Icons.edit_outlined,
                   color: Colors.green,
@@ -54,9 +78,14 @@ class _HomePageState extends State<HomePage> {
               const Expanded(child: SizedBox()),
               IconButton(
                 onPressed: () {
-                  setState(() {
-                    listOfTodos.removeAt(index);
-                  });
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext _) {
+                        return ConfirmDeletion(
+                          index: index,
+                          onDeleteTodo: deleteTodo,
+                        );
+                      });
                 },
                 icon: const Icon(
                   Icons.delete_outlined,
@@ -99,7 +128,7 @@ class _HomePageState extends State<HomePage> {
         showDialog(
             context: context,
             builder: (BuildContext _) {
-              return AddTodoDialog(onAddTodo: updateTodoList);
+              return AddTodoDialog(onAddTodo: addTodoList);
             });
       },
       backgroundColor: Colors.black,
